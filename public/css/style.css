@@ -1,0 +1,190 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#container {
+  flex: 1;
+}
+#loginsignin {
+  margin-left: 20%;
+  gap: 1rem;
+  display: flex;
+}
+.d-flex {
+  text-align: right;
+  margin-left: 100px;
+}
+.nav-link button {
+  background-color: white;
+  opacity: 0.7;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.btn:hover {
+  transform: scale(1.04);
+}
+.navbar-brand i {
+  font-size: 23px;
+  color: rgb(133, 15, 15);
+  margin-left: 10px;
+}
+.navbar-brand {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.main {
+  text-align: center;
+  background-color: rgb(251, 237, 221);
+  padding: 1rem 0;
+}
+.first i {
+  margin: 5px;
+  font-size: 20px;
+}
+.second a {
+  text-decoration: none;
+  color: black;
+  margin: 4px;
+}
+.second a:hover {
+  text-decoration: underline;
+}
+.listing-card {
+  margin-top: 20px !important;
+  padding: 5px;
+  border: none !important;
+}
+.listing-card-main {
+  margin-left: 50px;
+  margin-top: 20px !important;
+  height: 500px !important;
+  padding: 5px;
+  border: none !important;
+}
+.row {
+  margin-left: 40px !important;
+}
+.card-img-top {
+  object-fit: cover;
+  border-radius: 20px;
+  width: 100% !important;
+}
+.card-title {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+}
+.homepage .card:hover {
+  transform: scale(1.03);
+}
+.headerpage {
+  margin-top: 10px;
+  text-align: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-right: 30px;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 10px;
+}
+form label {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+form input {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.alert {
+  margin-top: 10px !important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 20px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.alert p {
+  margin-bottom: 0;
+}
+.editpageimage img {
+  width: 250px;
+}
+#map {
+  height: 400px;
+  width: 90vw;
+  max-width: 100%;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .filters {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .listing-card-main {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90% !important;
+  }
+
+  .row {
+    margin-left: 0 !important;
+    justify-content: center;
+  }
+
+  .filters .filter i {
+    font-size: 18px;
+  }
+
+  .filters .filter a {
+    font-size: 14px;
+  }
+
+  #loginsignin {
+    margin-left: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .d-flex {
+    margin-left: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .main {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .first i {
+    font-size: 18px;
+    margin: 3px;
+  }
+
+  .second a {
+    margin: 0 5px;
+    font-size: 14px;
+  }
+
+  form {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #search {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .btn-danger {
+    width: 100%;
+  }
+}
+.auth-body {
+  height: 100vh;
+  background-color: #f8f9fa;
+}

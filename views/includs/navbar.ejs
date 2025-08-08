@@ -1,0 +1,184 @@
+<style>
+  /* General Navbar Styles */
+  .navbar-brand {
+    font-weight: 600;
+  }
+  .navbar-brand i {
+    color: #ff385c;
+    font-size: 1.75rem;
+  }
+  #search-input {
+    border-radius: 10px;
+    width: 100%;
+    border: 1px solid #ddd;
+    width: 100%;
+  }
+  #search-btn {
+    border-radius: 20px;
+    background-color: #ff385c;
+    border-color: #ff385c;
+    display: flex;
+  }
+  #search-btn i {
+    margin-right: 5px;
+    margin-top: 7px;
+  }
+  
+  /* Logged-In User Styles */
+  .profile-dropdown .dropdown-toggle::after {
+    display: none; /* Hide default Bootstrap arrow */
+  }
+  .profile-image {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .dropdown-menu {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  /* --- Styles for the CUSTOM VERTICAL mobile navbar (when logged in) --- */
+  .navbar-vertical-mobile {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    gap: 1rem; /* Creates space between vertical items */
+  }
+  .navbar-vertical-mobile .navbar-brand {
+    font-size: 1.5rem;
+  }
+  .navbar-vertical-mobile #search-form {
+    width: 90%; /* Make search bar take most of the width */
+    max-width: 400px;
+  }
+  .navbar-vertical-mobile .profile-dropdown {
+    margin-top: 0.5rem;
+  }
+
+</style>
+
+<!-- ========================================================================================= -->
+<!-- The EJS logic below will render one of two completely different navbars based on login state -->
+<!-- ========================================================================================= -->
+
+
+<% if (curruser) { %>
+  <!-- ================================================================ -->
+  <!-- NAVBAR 1: Renders for LOGGED-IN USERS                            -->
+  <!-- Desktop: Horizontal Layout                                     -->
+  <!-- Mobile: Custom Vertical Layout (as requested in the first image) -->
+  <!-- ================================================================ -->
+  <nav class="navbar navbar-expand-md bg-body-tertiary sticky-top border-bottom">
+    <div class="container-fluid">
+
+      <!-- DESKTOP NAVBAR (Hidden on Mobile) -->
+      <div class="d-none d-md-flex align-items-center w-100">
+        <!-- Desktop Brand & Links -->
+        <a class="navbar-brand me-4" href="/listing"><i class="fa-solid fa-compass"></i> Airbnb</a>
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/listing"><button class="btn btn-light">All Property</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/listing/new"><button class="btn btn-light">Add Property</button></a></li>
+        </ul>
+        <!-- Desktop Search -->
+        <form method="get" action="/listing/search" class="d-flex mx-auto" role="search" style="max-width: 400px;">
+          <input name="Title" class="form-control me-2" type="search" placeholder="Search Destination" id="search-input" aria-label="Search" />
+          <button class="btn btn-danger" id="search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+        <!-- Desktop Profile Dropdown -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown profile-dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="<%= curruser.image.url %>" alt="Profile" class="profile-image me-2">
+              <span><%= curruser.username %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/user/edit">Edit Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+               <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/user/property">My Property</a></li>
+              <li><a class="dropdown-item" href="/user/bookedproperty">Booked Property</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- MOBILE NAVBAR (Hidden on Desktop) -->
+      <div class="d-md-none w-100 navbar-vertical-mobile">
+        <!-- Mobile Brand -->
+        <a class="navbar-brand" href="/listing"><i class="fa-solid fa-compass"></i> Airbnb</a>
+        <!-- Mobile Search -->
+        <form method="get" action="/listing/search" id="search-form" class="d-flex w-100" role="search">
+          <input name="Title" class="form-control" type="search" placeholder="Search Destination" aria-label="Search" />
+          <button class="btn btn-danger ms-2" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <!-- Mobile Profile Dropdown -->
+        <div class="dropdown profile-dropdown">
+          <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="<%= curruser.image.url %>" alt="Profile" class="profile-image">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <!-- Mobile-only links -->
+            <li><a class="dropdown-item" href="/listing"><button class="btn btn-light">All Property</button></a></li>
+            <li><a class="dropdown-item" href="/listing/new"><button class="btn btn-light">Add Property</button></a></li>
+            <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/user/property">My Property</a></li>
+              <li><a class="dropdown-item" href="/user/bookedproperty">Booked Property</a></li>
+             <li><hr class="dropdown-divider"></li>
+            <!-- Common links -->
+            <li><a class="dropdown-item" href="/user/edit">Edit Profile</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+<% } else { %>
+  
+  <!-- ================================================================ -->
+  <!-- NAVBAR 2: Renders for LOGGED-OUT USERS                           -->
+  <!-- Desktop: Horizontal Layout                                     -->
+  <!-- Mobile: Standard Hamburger Menu (as requested in the third image) -->
+  <!-- ================================================================ -->
+  <nav class="navbar navbar-expand-md bg-body-tertiary sticky-top border-bottom">
+    <div class="container-fluid">
+      <!-- Brand -->
+      <a class="navbar-brand" href="/listing"><i class="fa-solid fa-compass"></i> Airbnb</a>
+
+      <!-- Mobile Hamburger Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#loggedOutNavbarContent" aria-controls="loggedOutNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible Content -->
+      <div class="collapse navbar-collapse" id="loggedOutNavbarContent">
+        <!-- Links (All Property / Add Property) -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/listing"><button class="btn btn-light">All Property</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/listing/new"><button class="btn btn-light">Add Property</button></a></li>
+        </ul>
+
+        <!-- Search Bar -->
+        <form method="get" action="/listing/search" class="d-flex mx-auto" role="search">
+          <input name="Title" class="form-control me-2" type="search" placeholder="Search Destination" id="search-input" aria-label="Search" />
+          <button class="btn btn-danger" id="search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+
+        <!-- Login / Sign Up Links -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/login"><b><button class="btn btn-light">Login</button></b></a></li>
+          <li class="nav-item"><a class="nav-link" href="/signup"><b><button class="btn btn-light">Sign Up</button></b></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<% } %>

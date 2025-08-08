@@ -1,0 +1,162 @@
+<%- layout("/layouts/biolerplate.ejs")%>
+
+<style>
+    
+    .filters {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        margin: 20px 0;
+        margin-right: 10px;
+    }
+
+    .filter {
+        text-align: center;
+        opacity: 0.7;
+        cursor: pointer;
+        margin: 8px;
+    }
+
+    .filter:hover {
+        opacity: 1;
+        transform: scale(1.05); 
+        transition: transform 0.2s;
+    }
+
+    .filter a {
+        text-decoration: none;
+        color: black;
+        font-size: 0.9rem;
+    }
+
+    .filter i {
+        font-size: 1.5rem; 
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .switch {
+        border-radius: 20px;
+        border: 1.5px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .gst {
+        display: none;
+    }
+
+    
+    @media (max-width: 992px) {
+        .filters {
+            flex-wrap: nowrap;         
+            overflow-x: auto;        
+            justify-content: flex-start;
+            padding: 10px 20px;     
+        }
+
+   
+        .filters::-webkit-scrollbar {
+            display: none; 
+        }
+        .filters {
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+
+        .filter {
+            flex-shrink: 0; 
+        }
+    }
+</style>
+
+<body>
+    <!-- Filter Icons -->
+    <div class="filters">
+        <div class="filter">
+            <i class="fa-solid fa-fire"></i>
+            <a href="/listing/icon/Trending">Trending</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-bed"></i>
+            <a href="/listing/icon/Rooms">Rooms</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-mountain-city"></i>
+            <a href="/listing/icon/Mountain City">Mountain City</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-mountain"></i>
+            <a href="/listing/icon/Mountains">Mountains</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-chess-rook"></i>
+            <a href="/listing/icon/Castles">Castles</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-person-swimming"></i>
+            <a href="/listing/icon/Amazing Pools">Amazing Pools</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-snowflake"></i>
+            <a href="/listing/icon/Arctic">Arctic</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-campground"></i>
+            <a href="/listing/icon/Champing">Champing</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-cow"></i>
+            <a href="/listing/icon/Farms">Farms</a>
+        </div>
+        <div class="filter">
+            <i class="fa-solid fa-umbrella-beach"></i>
+            <a href="/listing/icon/Beach">Beach</a>
+        </div>
+        <div class="switch">
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                <label class="form-check-label" for="switchCheckDefault">Show GST</label>
+            </div>
+        </div>
+         <form method="get" action="/city">
+            <input style="border-radius: 20px; padding: 7px;" name="city" type="text" placeholder="Enter a City">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Listings -->
+    <div class="homepage">
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1">
+            <% for(let data of datas){ %>
+                <div class="card listing-card-main" style="width: 18rem; height: 100%;">
+                    <img style="height: 20rem; border-radius: 20px;" src="<%=data.image.url%>" class="card-img-top" alt="listing_image">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= data.title %></h5>
+                        <p>₹ <%= data.price.toLocaleString("en-IN") %>/night  <b class="gst">+<i>18%</i>GST</b></p>
+                        <a href="/listing/<%=data._id%>"><button class="btn btn-success">Show Details</button></a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+
+<script>
+    const toggle = document.querySelector("#switchCheckDefault");
+    const gsts = document.querySelectorAll(".gst");
+    toggle.addEventListener("click", () => {
+        for (let gst of gsts) {
+            if (gst.style.display !== "inline") {
+                gst.style.display = "inline";
+            } else {
+                gst.style.display = "none";
+            }
+        }
+    });
+</script>
+

@@ -1,0 +1,166 @@
+<%- layout("/layouts/biolerplate.ejs")%>
+<script>
+    const mapToken = "<%= process.env.MAP_TOKEN %>";
+    const data = <%- JSON.stringify(data) %>;
+</script>
+<style>
+   .booking-modal {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.26);
+  border-radius: 8px;
+}
+.modal-content {
+  text-align: center;
+}
+.close {
+  float: right;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.book-btn {
+  background: #00aaff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+} 
+</style>
+<body>
+    <div class="headerpage">
+        <h2>Property Details</h2>
+    </div>
+    <div class="container" >
+        <div class="listing-card" style="max-width: 50%; margin: auto;">
+            <img style="height: 15rem; border-radius: 10px; width: 50%; object-fit: cover;" src="<%=data.image.url%>" class="card-img-top" alt="Property Image">
+            <div class="card-body">
+                <p style="margin-top: 5px;"><b><%=data.title%></b></p>
+                <ul>
+                    <li>Owner : <%=data.owner.username%></li>
+                    <li><%=data.discription%></li>
+                    <li><%=data.feature%></li>
+                    <li>₹ <%= data.price.toLocaleString("en-IN") %>/night </li>
+                    <li><%=data.location%></li>
+                    <li><%=data.country%></li>
+                </ul>
+            </div>
+            <% if(curruser && curruser._id.equals(data.owner._id)){ %>
+            <div class="buttons">
+                <form method="GET" action="/listing/<%=data._id%>/edit">
+                    <button class="btn btn-warning mb-3">Edit</button>
+                </form>
+                <form method="post" action="/listing/<%=data._id%>?_method=DELETE">
+                    <button style="border-radius: 10px;" class="btn btn-danger mb-3">Delete</button>
+                </form>
+            </div>
+            <% } %>
+            <% if (!curruser ||((curruser && (data.owner._id.toString() !== curruser._id.toString())) && (alreadyBooked===false))) { %>
+                <button onclick="<%= curruser ? `showBookingModal(${data.price})` : `window.location.href='/login'` %>" class="book-btn">
+                  Book Property
+                </button>
+           <% } else if(data.owner._id.toString() !== curruser._id.toString()) {%>
+               <a href="/user/bookedproperty"> <button class="btn btn-success">Show Booking</button></a>
+           <%} %>
+        </div>
+
+        <% if(curruser){ %>
+        <div class="review-form mt-4" style="max-width: 50%; margin: auto;" >
+            <h3><b>Leave A Review</b></h3>
+            <form method="POST" action="/listing/<%=data._id%>/review" class="needs-validation">
+                <div class="mt-1">
+                    <label for="rating">Rating</label>
+                    <fieldset class="starability-slot mt-1">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="second-rate1" name="rating" value="1" />
+                        <label for="second-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="second-rate2" name="rating" value="2" />
+                        <label for="second-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="second-rate3" name="rating" value="3" />
+                        <label for="second-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="second-rate4" name="rating" value="4" />
+                        <label for="second-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="second-rate5" name="rating" value="5" />
+                        <label for="second-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Message</label>
+                    <textarea rows="5" cols="40" name="comment" id="comment" class="form-control" placeholder="Enter Your Comment" required></textarea>
+                    <div class="invalid-feedback">Please Enter Some Comment</div>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Submit</button>
+            </form>
+        </div>
+        <% } %>
+
+        <% if(data.reviews.length > 0){ %>
+        <div class="review-list mt-4" style="max-width: 50%; margin: auto;">
+            <h3><b>All Reviews</b></h3>
+            <div class="row" style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <% for(let review of data.reviews){ %>
+                <div class="card col-12 col-md-5 mb-3 ms-md-3" style="max-width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>@</strong><%=review.author.username%></h5>
+                        <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
+                        <p class="card-text"><%=review.comment%></p>
+                        <% if(curruser){ %>
+                        <form method="POST" action="/listing/<%=data._id%>/review/<%=review._id%>?_method=DELETE">
+                            <button type="submit" class="btn btn-dark">Delete</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <% } %>
+
+        <div class="mt-4 " style="width: 60%; margin-left: 23%;">
+            <p>Where You'll Be</p>
+            <div id="map"></div>
+        </div>
+    </div>
+   <div id="bookingModal" class="booking-modal" style="display:none;">
+  <div class="modal-content">
+    <span onclick="closeBookingModal()" class="close">&times;</span>
+    <h3>Scan to Pay</h3>
+    <img src="<%=data.image.url%>" alt="QR Code" style="width:200px;">
+    
+    <label for="nights">Number of nights:</label>
+    <input type="number" id="nights" name="nights" value="1" min="1" onchange="updatePrice(<%= data.price %>)">
+    
+    <p>Total Price: ₹<span id="totalPrice"><%= data.price %></span></p>
+    
+    <form method="POST" action="/bookings/<%= data._id %>">
+      <input type="hidden" name="nights" id="nightsInput" value="1">
+      <input type="hidden" name="totalPrice" id="totalPriceInput" value="<%= data.price %>">
+      <button type="submit">Confirm Booking</button>
+    </form>
+  </div>
+</div>
+<script>
+  function showBookingModal(price) {
+    document.getElementById('bookingModal').style.display = 'block';
+    updatePrice(price);
+  }
+
+  function closeBookingModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+  }
+
+  function updatePrice(price) {
+    const nights = document.getElementById('nights').value;
+    const total = price * nights;
+    document.getElementById('totalPrice').innerText = total;
+    document.getElementById('nightsInput').value = nights;
+    document.getElementById('totalPriceInput').value = total;
+  }
+</script>
+</body>
+<script src="/js/map.js"></script>
